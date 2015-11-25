@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#0000</color>
+    <color name="font">#FFF1F1F1</color>
+    <color name="caption">#FFFF</color>
+    <color name="text_shadow">#F000</color>
+</resources>
