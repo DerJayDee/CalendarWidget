@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">CalendarWidget</string>
+    <string name="service">UpdateService</string>
     <string name="calendar">Kalender</string>
     <string name="update_reached">onUpdate reached</string>
     <string name="time">time</string>
+    <string name="update">UpdateWidgetDate</string>
+    <string name="schedule_update">schedule next update for: </string>
+    <string name="on_receive">on receive: </string>
+    <string name="set_listeners">setting Click Listeners</string>
 </resources>
