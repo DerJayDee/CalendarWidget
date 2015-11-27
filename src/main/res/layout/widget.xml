@@ -15,8 +15,7 @@
         android:gravity="center"
         android:textSize="24sp"
         android:textColor="@color/font"
-        android:shadowColor="@color/text_shadow"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         android:paddingTop="6dp"
         android:background="@drawable/icon" />
 
@@ -27,13 +26,12 @@
         android:gravity="center_horizontal"
         android:textAlignment="center"
         android:layout_weight="1"
-        android:textSize="12sp"
+        android:textSize="13sp"
         android:textColor="@color/caption"
         android:text="@string/calendar"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="0"
         android:shadowDy="3"
         android:shadowRadius="3"
-        android:layout_marginTop="3dp"
-         />
+        android:layout_marginTop="5dp" />
 </LinearLayout>
