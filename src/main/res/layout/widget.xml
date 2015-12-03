@@ -17,7 +17,7 @@
         android:textColor="@color/font"
         android:layout_marginTop="16dp"
         android:paddingTop="6dp"
-        android:background="@drawable/icon" />
+        android:background="@drawable/icon_shadow" />
 
     <TextView
         android:id="@+id/caption"
