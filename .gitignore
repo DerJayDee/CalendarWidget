@@ -2,5 +2,7 @@
 out/
 gen/
 *.iml
+*.ipr
+*.iws
 build/
 .gradle/

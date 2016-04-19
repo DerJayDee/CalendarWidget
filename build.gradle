@@ -1,19 +1,22 @@
+import groovy.swing.SwingBuilder
+
 buildscript {
     repositories {
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.1'
+        classpath group: 'com.android.tools.build', name: 'gradle', version: '2.0.0'
     }
 }
-
 apply plugin: 'com.android.application'
+apply plugin: 'idea'
 
+//noinspection GroovyMissingReturnStatement
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
-
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+    //noinspection GroovyMissingReturnStatement
     defaultConfig {
         applicationId "de.dlrg.rodenkirchen.calendar"
         versionCode 2
@@ -21,15 +24,85 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
     }
-
+    signingConfigs {
+        release {
+            storeFile file("dlrg.keystore")
+            storePassword ""
+            keyAlias "dlrg"
+            keyPassword ""
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    productFlavors {
+    }
+}
+
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+        vcs = 'Git'
+    }
+    module {
+        downloadJavadoc = true // defaults to false
+        downloadSources = true
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
+    gradleVersion = '2.12'
 }
+dependencies {
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(':assembleRelease')) {
+
+        def pass = "";
+
+        if (System.console() == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true, // Otherwise the build will continue running before you closed the dialog
+                        title: 'Enter password', // Dialog title
+                        alwaysOnTop: true, // pretty much what the name says
+                        resizable: false, // Don't allow the user to resize the dialog
+                        locationRelativeTo: null, // Place dialog in center of the screen
+                        pack: true, // We need to pack the dialog (so it will take the size of it's children)
+                        show: true // Let's show it
+                ) {
+                    vbox { // Put everything below each other
+                        label(text: "Please enter key passphrase:")
+                        //noinspection GroovyAssignabilityCheck
+                        input = passwordField();
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            pass = input.password; // Set pass variable to value of input field
+                            dispose(); // Close dialog
+                        })
+                    } // vbox end
+                } // dialog end
+            } // edt end
+        } else {
+            pass = System.console().readPassword("\nPlease enter key passphrase: ");
+            pass = new String(pass);
+        }
+
+        if (pass.size() <= 0) {
+            throw new InvalidUserDataException("You must enter a password to proceed.");
+        }
+
+        android.signingConfigs.release.storePassword = pass.toString();
+        android.signingConfigs.release.keyPassword = pass.toString();
+
+    } // end if has task
+} // end whenReady
