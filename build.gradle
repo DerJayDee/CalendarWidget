@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'com.android.tools.build', name: 'gradle', version: '2.0.0'
+        classpath group: 'com.android.tools.build', name: 'gradle', version: '2.2.2'
     }
 }
 apply plugin: 'com.android.application'
@@ -15,7 +15,7 @@ apply plugin: 'idea'
 //noinspection GroovyMissingReturnStatement
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "25.0.3"
     //noinspection GroovyMissingReturnStatement
     defaultConfig {
         applicationId "de.dlrg.rodenkirchen.calendar"
@@ -26,10 +26,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("dlrg.keystore")
-            storePassword ""
+            storeFile file("dlrg-store.jks")
+            storePassword "" // OGRodenkirchen
             keyAlias "dlrg"
-            keyPassword ""
+            keyPassword "" // OGRodenkirchen
         }
     }
     buildTypes {
@@ -61,7 +61,7 @@ idea {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
+    gradleVersion = '3.5'
 }
 dependencies {
 }
@@ -69,7 +69,7 @@ dependencies {
 gradle.taskGraph.whenReady { taskGraph ->
     if (taskGraph.hasTask(':assembleRelease')) {
 
-        def pass = "";
+        def pass = ""
 
         if (System.console() == null) {
             new SwingBuilder().edt {
@@ -84,25 +84,25 @@ gradle.taskGraph.whenReady { taskGraph ->
                     vbox { // Put everything below each other
                         label(text: "Please enter key passphrase:")
                         //noinspection GroovyAssignabilityCheck
-                        input = passwordField();
+                        input = passwordField()
                         button(defaultButton: true, text: 'OK', actionPerformed: {
-                            pass = input.password; // Set pass variable to value of input field
-                            dispose(); // Close dialog
+                            pass = input.password // Set pass variable to value of input field
+                            dispose() // Close dialog
                         })
                     } // vbox end
                 } // dialog end
             } // edt end
         } else {
-            pass = System.console().readPassword("\nPlease enter key passphrase: ");
-            pass = new String(pass);
+            pass = System.console().readPassword("\nPlease enter key passphrase: ")
+            pass = new String(pass)
         }
 
         if (pass.size() <= 0) {
-            throw new InvalidUserDataException("You must enter a password to proceed.");
+            throw new InvalidUserDataException("You must enter a password to proceed.")
         }
 
-        android.signingConfigs.release.storePassword = pass.toString();
-        android.signingConfigs.release.keyPassword = pass.toString();
+        android.signingConfigs.release.storePassword = pass.toString()
+        android.signingConfigs.release.keyPassword = pass.toString()
 
     } // end if has task
 } // end whenReady
