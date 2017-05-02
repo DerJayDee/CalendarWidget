@@ -6,3 +6,4 @@ gen/
 *.iws
 build/
 .gradle/
+local.properties
